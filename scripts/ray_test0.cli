@@ -1,0 +1,4 @@
+screen 500 500
+orthocamera
+sphere 150 250 250 -1000 0 1 0 0 0 0
+trace
