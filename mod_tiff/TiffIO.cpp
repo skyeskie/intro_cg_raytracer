@@ -112,13 +112,20 @@ string TiffIO::read_file(string filename) {
 string TiffIO::tiff_stat(string filename) {
     ifstream imfile;
     tiff_open(imfile, filename);
+    //Back up old tags
+    map<int, IFD_Entry> old_tags;
+    old_tags = img_tags;
+    int old_wid = img_width,
+        old_len = img_height,
+        old_type = img_colortype;
     bool tags_loaded = false;
-
+    
     //tiff_stat is a little more forgiving
     //It won't crash the read stack on fail
     try {
         tiff_read_tags(imfile);
-        tags_loaded = true;
+	tags_loaded = true;
+	
         cout << "TiffStat on [" << filename << "]:" << endl;
         cout << "Endian: " << ((img_little_endian)?"Little":"Big") << "\n";
         cout << "Magic: " << dec << img_magic_no << "\n";
@@ -137,6 +144,11 @@ string TiffIO::tiff_stat(string filename) {
         } else {
             cout << "Error: " << excpt.what() << endl;
         }
+        //Restore old tags
+        img_tags  = old_tags;
+        img_width = old_wid;
+        img_height= old_len;
+        img_colortype = old_type;
         return "null";
     }
 
@@ -148,6 +160,12 @@ string TiffIO::tiff_stat(string filename) {
     }
     cout << endl;
     imfile.close();
+
+    //Restore old tags
+    img_tags = old_tags;
+    img_width = old_wid;
+    img_height= old_len;
+    img_colortype = old_type;
     return "null";
 }
 
@@ -658,7 +676,7 @@ void TiffIO::tiff_load_imgdata(ifstream& imfile) {
         }//*/
     } else if(img_colortype == TIFF_BILEVEL) {
         throw runtime_error("Bilevel images not supported.");
-    } throw runtime_error("Invalid image type or image not loaded.");
+    } else throw runtime_error("Invalid image type or image not loaded.");
 }
 
 void TiffIO::tiff_draw_window() {
@@ -679,7 +697,6 @@ void TiffIO::tiff_draw_window() {
         throw runtime_error("Palette images not supported.");
         /*uint ind;
         pixel tmp;
-        try {
         for(uint i=0; i<img_height; i++) {
             for(uint j=0; j<img_width; j++) {
                 ind = img_data_bw[img_height-i-1][j];
@@ -695,14 +712,6 @@ void TiffIO::tiff_draw_window() {
                     ch->main_window[i][j][2] = (GLubyte) tmp.b;
                 }
             }
-        }
-        }
-        catch(out_of_range excpt) {
-            cout << img_height-1 << "/" << img_data_bw.size() << endl;
-            cout << hex << ind << "/" << img_colormap.size() << endl;
-            cout << img_colormap[0].r << img_colormap[0].g << img_colormap[0].b;
-            cout << endl;
-            throw runtime_error("Out of range on data.");
         }//*/
     } else if(img_colortype == TIFF_RGB) {
         pixel tmp;
