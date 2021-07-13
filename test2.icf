@@ -1,0 +1,7 @@
+#Test 2
+#Used for demonstrating read function from file
+# from within test.icf
+
+#Yeah... we're not sanitizing yet
+draw This Is Test2
+draw #error, should exit stack

@@ -19,6 +19,15 @@
 #include <GL/glut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
+#include "mod_base/FunctionCommand.h"
+#include "mod_base/CommandHandle.h"
+#include "mod_dummy/DummyHandle.h"
+#include <stdexcept>
+using namespace std;
+
+//For now, make command handler global
+CommandHandle main_handler;
 
 /*	Create checkerboard image	*/
 #define	checkImageWidth 1024
@@ -191,15 +200,34 @@ mouse(int button, int press, int x, int y)
 void
 main_loop(char line[])
 {
-   /* PUT YOUR CLI CODE HERE! */
-  
-   if (line == NULL)
+	/**
+	 * Pass line to main_handler
+	 * return "exit" indicates end the program
+	 * return "null" indicates suppress output
+	 */
+	std::string result;
+	try {
+		result = main_handler.execute(line);
+	}
+	catch(std::invalid_argument excpt) {
+		cerr << "Error: " << excpt.what() << endl;
+		main_handler.help(line);
+	}
+	catch(std::runtime_error excpt) {
+		cerr << "Error: " << excpt.what() << endl;
+		result = "null";
+	}
+	
+	//Suppress close and exitFS commands from cmd prompt
+   if(result=="close" || result=="exitFS") result = "null";
+   
+   if (line == NULL || result == "exit")
    {
       printf("Exiting...\n");
       exit(0);
    }
-   else
-      printf("RESULT: %s\n",line);
+   else if( result != "null" )
+      cout << "RESULT: " << result << endl;
      
    printf("CLI> ");
    fflush(stdout);
@@ -295,6 +323,14 @@ main(int argc, char** argv)
    glutMouseFunc(mouse);
    //   glutMotionFunc(motion);
 
+   /**
+	* Load modules into main handler here
+	* general syntax is module( handler )
+	* 
+	* main_handler is declared as global at beginning
+	*/
+   DummyHandle handler_mod_dummy(main_handler);
+   
    printf("CLI> ");
    fflush(stdout);
 
