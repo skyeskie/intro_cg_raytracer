@@ -6,8 +6,8 @@ GLUT_LIBS = $(prefix)/lib/libglut.so.3
 X_LIBADD =  -lXmu -lXext -lXi -lX11
 INCLUDES = -Iinclude -I$(prefix)/include  
 LDADD = $(GLUT_LIBS) $(prefix)/lib/libGLU.so.1 $(prefix)/lib/libGL.so  -lm
-CFLAGS = -g -O2 -Wall -fomit-frame-pointer -ffast-math \
--fexpensive-optimizations -D_REENTRANT
+CFLAGS = -g -Wall -fomit-frame-pointer -ffast-math -D_REENTRANT \
+-O2 -fexpensive-optimizations
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 LINK = $(CC) $(CFLAGS) $(LDFLAGS) -o $@
 
@@ -22,9 +22,9 @@ LINK = $(CC) $(CFLAGS) $(LDFLAGS) -o $@
 
 all: main
 
-CLI_OBJECTS=main.o CommandHandle.o DummyHandle.o ModuleCommand.o FunctionCommand.o TiffIO.o IFD_Entry.o
+CLI_OBJECTS=main.o CommandHandle.o DummyHandle.o ModuleCommand.o FunctionCommand.o TiffIO.o IFD_Entry.o ImageResize.o
 
-main: main.o mod_base mod_dummy mod_tiff
+main: main.o mod_base mod_dummy mod_tiff mod_filter
 	$(LINK) $(CLI_OBJECTS) $(LDADD) $(LIBS)
 
 mod_base: CommandHandle.o FunctionCommand.o ModuleCommand.o
@@ -50,6 +50,12 @@ TiffIO.o:
 
 IFD_Entry.o:
 	$(C++) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -c mod_tiff/IFD_Entry.cpp -o IFD_Entry.o
+
+mod_filter: ImageResize.o
+
+ImageResize.o:
+	$(C++) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -c mod_filter/ImageResize.cpp -o ImageResize.o
+
 
 clean:
 	-rm -f *.o $(PROGRAMS) *~ mod_*/*~

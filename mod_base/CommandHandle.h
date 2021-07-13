@@ -91,14 +91,14 @@ public:
     size_t window_width;
     size_t window_height;
     
-private:
     /**
      * str_to_lower()
      * @arg string to convert to lower case
      * @post all characters in string are lower case
      */
     void str_to_lower(std::string&);
-    
+
+private:    
     /**
      * split_cmd()
      * @arg line of code to split

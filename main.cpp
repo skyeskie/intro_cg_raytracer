@@ -20,11 +20,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+#include <stdexcept>
+
 #include "mod_base/FunctionCommand.h"
 #include "mod_base/CommandHandle.h"
 #include "mod_dummy/DummyHandle.h"
 #include "mod_tiff/TiffIO.h"
-#include <stdexcept>
+#include "mod_filter/ImageResize.h"
+
 using namespace std;
 
 /*	Create checkerboard image	*/
@@ -348,6 +351,7 @@ main(int argc, char** argv)
    
    DummyHandle handler_mod_dummy(main_handler);
    TiffIO handler_tiff_io(main_handler);
+   ImageResize handler_resample(main_handler);
 
    
    printf("CLI> ");
