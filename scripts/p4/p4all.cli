@@ -1,0 +1,96 @@
+#Setup
+resizewin 500 500
+pause
+
+#Go through basic
+reset
+read simple.cli
+pause
+
+#Go through -1 to 1
+ortho -1.2 1.2 -1.2 1.2 -1.2 1.2
+
+reset
+read circle.cli
+pause
+
+reset
+read cube.cli
+pause
+
+reset
+read x.cli
+pause
+
+reset
+read y.cli
+pause
+
+reset
+read z.cli
+pause
+
+reset
+read the_face.cli
+pause
+
+#Go through Misc
+ortho 0 500 0 500 0 500
+reset
+read cube2.cli
+pause
+
+#Go through main
+reset
+read ortho.cli
+pause
+
+reset
+read face.cli
+pause
+
+reset
+read ortho_test.cli
+pause
+
+reset
+read cube_test_1.cli
+pause
+
+reset
+read cube_test_2.cli
+pause
+
+reset
+read cube_test_3.cli
+pause
+
+#Rotate
+reset
+read faces.cli
+pause
+
+reset
+read rot.cli
+pause
+
+reset
+read junk.cli
+pause
+
+#Orient
+reset
+read orient.cli
+pause
+
+reset
+read orient2.cli
+pause
+
+reset
+read orient3.cli
+pause
+
+#User
+reset
+read orientSY.cli

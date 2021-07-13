@@ -1,6 +1,6 @@
 ******************************************
 * CS 258 Spring 2011
-* Project 2: TIFF read/write
+* Project 3: Scaling
 * Author: Scott Yeskie
 ******************************************
 

@@ -1,0 +1,41 @@
+resizewin 500 500
+
+#Simple shearing
+reset
+push
+orient 1 1 0 0 1 0 0 0 1
+read cube_test_1.cli
+pop
+
+pause
+#Smaller factor, so fits in window
+reset
+push
+orient 1 0.3 0 0 1 0 0 0 1
+read cube_test_1.cli
+pop
+
+pause
+#Shearing in two directions
+reset
+push
+orient 1 0.3 0 0.3 1 0 0 0 1
+read cube_test_1.cli
+pop
+
+pause
+#Shearing in z-direction
+reset
+push
+orient 1 0 0 0 1 0 0.3 0 1
+read cube_test_1.cli
+pop
+
+pause
+#Rotate and shear
+reset
+push
+orient 0 .5 .5 .5 0 .5 0 0 1
+translate 3 3 0
+read cube_test_1.cli
+pop

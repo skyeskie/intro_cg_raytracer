@@ -16,11 +16,12 @@
 #include <sstream>
 #include <string>
 #include <stdexcept>
+#include <math.h>
+#include <stdlib.h>
 #include "../mod_base/CommandHandle.h"
 #include "IFD_Entry.h"
 using namespace std;
 
-typedef size_t uint;
 
 //enum COLOR_TYPES { BILEVEL_IMG, GREYSC_IMG, PALETTE_IMG, RGB_IMG };
 
@@ -31,11 +32,93 @@ TiffIO::TiffIO(CommandHandle& cho): ModuleCommand() , ch(&cho),
     cho.add_command("tiffstat", *this);
     cho.add_command("tiffread", *this);
     cho.add_command("tiffwrite", *this);
+    cho.add_command("tiffreset", *this);
+
+    //Setup default tags
+    reset_tags();
 }
 
 TiffIO::TiffIO() : ModuleCommand(),
     little_endian_machine(true)//Hardcode for now. Can put test in c'tor
-{}
+{
+    reset_tags();
+}
+
+string TiffIO::reset_tags() {
+    img_tags.clear();
+    typedef std::pair<int, IFD_Entry> TAG;
+    IFD_Entry data;
+    //NewSubfileType (254) LONG (4) x1 :    { 0 }
+    data.type = 4; data.identifier = 254; data.size = 1;
+    data.intdata.push_back(0);
+    img_tags.insert(TAG(data.identifier,data));
+
+    
+    //Compression (259) SHORT (3) x1 :      { 1 }
+    data.intdata[0] = 1;
+    data.type = 3; data.identifier = 259; data.size = 1;
+    img_tags.insert(TAG(data.identifier,data));
+    //PlanarConfiguration (284) SHORT (3) x1 :      { 1 }
+    data.type = 3; data.identifier = 284; data.size = 1;
+    img_tags.insert(TAG(data.identifier,data));
+    //Orientation (274) SHORT (3) x1 :      { 1 }
+    data.type = 3; data.identifier = 274; data.size = 1;
+    img_tags.insert(TAG(data.identifier,data));
+
+    //ResolutionUnit (296) SHORT (3) x1 :   { 2 }
+    data.type = 3; data.identifier = 296; data.size = 1;
+    data.intdata[0] = 2;
+    img_tags.insert(TAG(data.identifier,data));
+    //PhotometricInterpretation (262) SHORT (3) x1 :        { 2 }
+    data.type = 3; data.identifier = 262; data.size = 1;
+    img_tags.insert(TAG(data.identifier,data));
+    
+    //SamplesPerPixel (277) SHORT (3) x1 :  { 3 }
+    data.type = 3; data.identifier = 277; data.size = 1;
+    data.intdata[0] = 3;
+    img_tags.insert(TAG(data.identifier,data));
+    
+    data.intdata[0] = 96; data.intdata2.push_back(1);
+    //XResolution (282) RATIONAL (5) x1 :   { 96/1 }
+    data.type = 5; data.identifier = 282; data.size = 1;
+    img_tags.insert(TAG(data.identifier,data));
+    //YResolution (283) RATIONAL (5) x1 :   { 96/1 }
+    data.type = 5; data.identifier = 283; data.size = 1;
+    img_tags.insert(TAG(data.identifier,data));
+    
+    //BitsPerSample (258) SHORT (3) x3 :    { 8, 8, 8 }
+    data.type = 3; data.identifier = 258; data.size = 3;
+    data.intdata[0] = 8; data.intdata.push_back(8); data.intdata.push_back(8);
+    img_tags.insert(TAG(data.identifier,data));
+
+    //Cue to get from window
+    img_width = 0;
+    img_height = 0;
+
+    //ImageWidth (256) LONG (4) x1 :        { 509 }
+    data.type = 4; data.identifier = 256; data.size = 1;
+    data.intdata[0] = img_width;
+    img_tags.insert(TAG(data.identifier,data));
+    //ImageLength (257) LONG (4) x1 :       { 508 }
+    data.type = 4; data.identifier = 257; data.size = 1;
+    data.intdata[0] = img_height;
+    img_tags.insert(TAG(data.identifier,data));
+
+
+    //Will be filled in by tiffwrite, but we need to make sure tags exist
+    data.type = 4; data.size = 1; data.intdata[0] = 0;
+    data.identifier = 273;//StripOffsets
+    img_tags.insert(TAG(data.identifier,data));
+    data.identifier = 278;//RowsPerStrip
+    img_tags.insert(TAG(data.identifier,data));
+    data.identifier = 279;//StripByteCounts
+    img_tags.insert(TAG(data.identifier,data));
+
+    img_colortype = TIFF_RGB;
+    
+    return "null";
+}
+
 
 string TiffIO::execute(vector< string > argv) {
     if(argv.size()==0)
@@ -44,7 +127,8 @@ string TiffIO::execute(vector< string > argv) {
     //Split off command
     string cmd = argv[0];
     argv.erase( argv.begin() );
-
+    if(cmd=="tiffreset") return reset_tags();
+        
     //For now, hardcode starter function in
     if(argv.size()==1) {
         if(cmd=="tiffstat") return tiff_stat(argv[0]);
@@ -55,8 +139,10 @@ string TiffIO::execute(vector< string > argv) {
         //Setup defaults
         
         //Default change size to match window bounds
-        img_width = ch->window_width;
-        img_height = ch->window_height;
+        GLint viewport[4];
+        glGetIntegerv(GL_VIEWPORT, viewport);
+        img_width = min(abs(viewport[2]-viewport[0]),MAX_IMG_WIDTH);
+        img_height = min(abs(viewport[3]-viewport[1]),MAX_IMG_HEIGHT);
 
         ostringstream strconv;
         switch(argv.size()) {

@@ -1,6 +1,7 @@
 #include "ModuleCommand.h"
 #include <string>
 #include <stdexcept>
+#include <cmath>
 using namespace std;
 
 float ModuleCommand::sanitize_float(string str) {
@@ -11,7 +12,7 @@ float ModuleCommand::sanitize_float(string str) {
     bool neg_num = false;
     bool end_space = false;
     bool can_dec = true;
-    bool divide = false;
+    int divide = 0;
 
     //Tests calculated each loop
     bool is_space = false;
@@ -24,6 +25,7 @@ float ModuleCommand::sanitize_float(string str) {
     int cur_num = 0;
 
     for(string::iterator it = str.begin(); it!=str.end(); it++) {
+        if(divide) ++divide;
         is_space = (*it==' ' || *it=='\t'|| *it=='\r'|| *it=='\n');
         num_tmp = *it - '0';
         is_num = (num_tmp>=0 && num_tmp<10);
@@ -50,7 +52,7 @@ float ModuleCommand::sanitize_float(string str) {
         } else if(*it=='.') { //For decimal
             can_dec = false;
             can_neg = false;
-            divide = true;
+            divide = 1;
             numer = cur_num;
             cur_num = 0;
         } else {
@@ -60,9 +62,7 @@ float ModuleCommand::sanitize_float(string str) {
 
     float res = cur_num;
     if(divide) {
-        while(res >= 1) {
-            res /= 10;
-        }
+        res /= pow(10, divide-1);
     }
 
     res += (float) numer;
@@ -120,4 +120,19 @@ int ModuleCommand::sanitize_int(string str) {
     }
 
     return ((neg_num)? cur_num*-1 : cur_num);
+}
+
+void ModuleCommand::check_args(size_t n, vector< string >& argv, string fill)
+{
+    check_args(n, n, argv, fill);
+}
+
+void ModuleCommand::check_args(size_t lo, size_t hi, vector< string >& argv, string fill)
+{
+    if(argv.size()<lo || argv.size()>hi) {
+        throw invalid_argument("Invalid number of arguments.");
+    }
+    while(fill!="{NULL}", argv.size() < hi) {
+        argv.push_back(fill);
+    }
 }
