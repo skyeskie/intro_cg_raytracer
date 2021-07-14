@@ -174,7 +174,7 @@ string CommandHandle::read_file(vector<string> file) {
 			try { 
 				result = execute(cmd);
 			}
-			catch(runtime_error excpt) {
+			catch(runtime_error &excpt) {
 				cerr << "Error in file '"<<file[1]<<"':" << endl;
 				cerr << "\t" << excpt.what() << endl;
 				cerr << "\tExiting all read operations.\n" << endl;

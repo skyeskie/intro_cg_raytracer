@@ -209,11 +209,11 @@ main_loop(char line[])
 	try {
 		result = main_handler.execute(line);
 	}
-	catch(std::invalid_argument excpt) {
+	catch(std::invalid_argument &excpt) {
 		cerr << "Error: " << excpt.what() << endl;
 		main_handler.help(line);
 	}
-	catch(std::runtime_error excpt) {
+	catch(std::runtime_error &excpt) {
 		cerr << "Error: " << excpt.what() << endl;
 		result = "null";
 	}
