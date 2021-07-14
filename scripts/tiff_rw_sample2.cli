@@ -1,0 +1,23 @@
+# Author: Scott Yeskie
+# Description:
+# opens an image and outputs several slices of it
+# works on play.tif (Greyscale)
+
+# to clean up files, can use
+#       $rm play*w.tif
+
+tiffread play.tif #should default to whole window
+
+tiffwrite play_fullw.tif
+
+tiffwrite play1w.tif 10 10 390 390
+tiffwrite play2w.tif 390 390 10 10
+# Should handle swaps
+# so play1.tif and play2.tif should be identical
+
+tiffwrite play3w.tif 95 20 7 450
+
+tiffstat play3w.tif
+
+#read one in to see
+tiffread play3w.tif

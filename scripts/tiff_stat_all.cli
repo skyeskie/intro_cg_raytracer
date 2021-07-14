@@ -1,0 +1,38 @@
+# Author: Scott Yeskie
+#
+# TiffStats all base files
+#  uses a wait in between each one
+#  note: you must click on terminal in order to advance the script
+#        it will not see and <enter> press if you have the GL window active
+
+TiffStat eeyore.tif
+wait
+TiffStat eeyore2.tif
+wait
+TiffStat eeyore3.tif #Bad first two bytes
+wait
+TiffStat eeyore4.tif #Bad magic number
+wait
+TiffStat p4_faces.tif
+wait
+TiffStat p4_ortho.tif
+wait
+TiffStat p4_persp.tif
+wait
+TiffStat p4_simple.tif
+wait
+TiffStat p4_test.tif
+wait
+TiffStat play.tif
+wait
+TiffStat play2.tif
+wait
+TiffStat play3.tif
+wait
+TiffStat playpal.tif
+wait
+TiffStat playrgb.tif
+wait
+TiffStat pooh.tif
+wait
+TiffStat pooh_le.tif

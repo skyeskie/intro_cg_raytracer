@@ -2,6 +2,6 @@
 #Used for demonstrating read function from file
 # from within test.icf
 
-#Yeah... we're not sanitizing yet
-draw This Is Test2
+#RECURSION
+read test.icf
 draw #error, should exit stack

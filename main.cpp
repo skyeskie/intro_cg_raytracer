@@ -23,16 +23,21 @@
 #include "mod_base/FunctionCommand.h"
 #include "mod_base/CommandHandle.h"
 #include "mod_dummy/DummyHandle.h"
+#include "mod_tiff/TiffIO.h"
 #include <stdexcept>
 using namespace std;
+
+/*	Create checkerboard image	*/
+#ifndef MAIN_WINDOW_SET
+#define MAIN_WINDOW_SET
+#define	checkImageWidth 1024
+#define	checkImageHeight 1024
+GLubyte checkImage[checkImageHeight][checkImageWidth][3];
+#endif
 
 //For now, make command handler global
 CommandHandle main_handler;
 
-/*	Create checkerboard image	*/
-#define	checkImageWidth 1024
-#define	checkImageHeight 1024
-GLubyte checkImage[checkImageHeight][checkImageWidth][3];
 
 static GLint height;
 
@@ -43,10 +48,10 @@ makeCheckImage(void)
     
    for (i = 0; i < checkImageHeight; i++) {
       for (j = 0; j < checkImageWidth; j++) {
-         c = ((((i&0x8)==0)^((j&0x8)==0)))*255;
-         checkImage[i][j][0] = (GLubyte) c;
-         checkImage[i][j][1] = (GLubyte) c;
-         checkImage[i][j][2] = (GLubyte) c;
+        c = ((((i&0x8)==0)^((j&0x8)==0)))*255;
+        main_handler.main_window[i][j][0] = (GLubyte) c;
+        main_handler.main_window[i][j][1] = (GLubyte) c;
+        main_handler.main_window[i][j][2] = (GLubyte) c;
       }
    }
 }
@@ -82,7 +87,7 @@ display(void)
    glClear(GL_COLOR_BUFFER_BIT);
    glRasterPos2i(0, 0);
    glDrawPixels(checkImageWidth, checkImageHeight, GL_RGB, 
-                GL_UNSIGNED_BYTE, checkImage);
+                GL_UNSIGNED_BYTE, main_handler.main_window);
    glFlush();
 }
 
@@ -200,29 +205,35 @@ mouse(int button, int press, int x, int y)
 void
 main_loop(char line[])
 {
-	/**
-	 * Pass line to main_handler
-	 * return "exit" indicates end the program
-	 * return "null" indicates suppress output
-	 */
-	std::string result;
-	try {
-		result = main_handler.execute(line);
-	}
-	catch(std::invalid_argument &excpt) {
-		cerr << "Error: " << excpt.what() << endl;
-		main_handler.help(line);
-	}
-	catch(std::runtime_error &excpt) {
-		cerr << "Error: " << excpt.what() << endl;
-		result = "null";
-	}
-	
-	//Suppress close and exitFS commands from cmd prompt
+    /**
+    * Pass line to main_handler
+    * return "exit" indicates end the program
+    * return "null" indicates suppress output
+    */
+    std::string result;
+    try {
+        result = main_handler.execute(line);
+    }
+    catch(std::invalid_argument &excpt) {
+        cerr << "Error: " << excpt.what() << endl;
+        main_handler.help(); //Help for last call
+    }
+    catch(std::runtime_error &excpt) {
+        cerr << "Error: " << excpt.what() << endl;
+        result = "null";
+    }
+
+    
+
+//Suppress close and exitFS commands from cmd prompt
    if(result=="close" || result=="exitFS") result = "null";
    
-   if (line == NULL || result == "exit")
-   {
+   if(result=="redraw") {
+       glutReshapeWindow(main_handler.window_width, main_handler.window_height);
+       glutPostRedisplay();
+       //reshape(main_handler.window_width, main_handler.window_height);
+       //display();
+   } else if (line == NULL || result == "exit" || result == "quit") {
       printf("Exiting...\n");
       exit(0);
    }
@@ -311,10 +322,13 @@ read_next_command(unsigned char key, int x, int y)
 int 
 main(int argc, char** argv)
 {
+    bool ds = (argc>1);
+    if(ds) ds =(string(argv[1]) == "-ds");
    glutInit(&argc, argv);
    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
    glutInitWindowSize(250, 250);
-   glutInitWindowPosition(100, 100);
+
+   glutInitWindowPosition((ds)?3000:100, 100);
    glutCreateWindow(argv[0]);
    init();
    glutDisplayFunc(display);
@@ -325,11 +339,16 @@ main(int argc, char** argv)
 
    /**
 	* Load modules into main handler here
-	* general syntax is module( handler )
+	* general syntax is ModuleClass ./mnmodule( handler )
 	* 
 	* main_handler is declared as global at beginning
 	*/
+   
+   //main_handler.main_window = &checkImage;
+   
    DummyHandle handler_mod_dummy(main_handler);
+   TiffIO handler_tiff_io(main_handler);
+
    
    printf("CLI> ");
    fflush(stdout);

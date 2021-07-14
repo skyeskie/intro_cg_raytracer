@@ -1,0 +1,17 @@
+# Author: Scott Yeskie
+#
+# Description: Pure evil.
+# Makes sure TiffStat doesn't use / pollute the same
+#  image tags database that TiffRead uses
+# Can make the program segfault in worst case
+#
+# Make sure it shows Pooh exactly and no checkerboard
+# Also should check to make sure tiffstat from p2 and pooh match
+
+tiffread pooh.tif
+tiffstat play.tif
+tiffwrite p2.tif
+
+tiffread p2.tif
+tiffstat pooh.tif
+tiffstat p2.tif

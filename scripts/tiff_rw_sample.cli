@@ -1,0 +1,23 @@
+# Author: Scott Yeskie
+# Description:
+# opens an image and outputs several slices of it
+# works on pooh.tif (RGB)
+
+# to clean up files, can use
+#       $rm pooh*w.tif
+
+tiffread pooh.tif #should default to whole window
+
+tiffwrite pooh_fullw.tif
+
+tiffwrite pooh1w.tif 10 10 90 90
+tiffwrite pooh2w.tif 90 90 10 10
+# Should handle swaps
+# so pooh1.tif and pooh2.tif should be identical
+
+tiffwrite pooh3w.tif 60 20 7 150
+
+tiffstat pooh3w.tif
+
+#read one in to see
+tiffread pooh3w.tif

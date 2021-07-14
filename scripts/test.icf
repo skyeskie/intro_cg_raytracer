@@ -15,8 +15,7 @@ color help
 	color 2,   25, 23
 	COLOR 15,  	15, 15
   CoLoR 20, 20, 	20
-	 color 99 #Color requires 3 params
   move 23, 0#, 255
 
-read test2.icf -v #let's just force it verbose
+read scripts/test2.icf -v #let's just force it verbose
 draw 999, 999, 999 #should not execute
