@@ -2,7 +2,9 @@
 
 ## Introduction to Computer Graphics
 
-# Project 1: Command Line Interpreter
+- Project 1: Command line interpreter
+- Project 2: TIFF read/write
+- Project 3: Image Resizing
 
 Updated July 2021 to make sure still runs (using Manjaro linux).
 
@@ -40,6 +42,26 @@ As a convenience, will try to get image in `./images` directory before failing.
 - `tiffwrite <file>`- Write window to file
 - `iotest <file>` - test read function with some TIFF values filled in
 
+### Image resize commands
+
+- `resize <factor>` - Resizes by specified factor. Negative values will flip the image
+- `resize <x_factor> <y_factor>` Resizes by different factors on `x` and `y` axis
+- `scale <factor>` - Resizes by specified factor
+- `border <type>` - Changes how the border is handled for multipixel resize filters
+    - `zero` - (default) outside pixels are black
+    - `freeze`- pixel matches closest edge pixel
+    - `circular` - reflects pixels that cross the edge
+    - `truncate` - reweight the filter to ignore outside pixels
+- `select <method> [<filter_width>]` - sets the resize method. Parameter filter width defaults to 0
+    - "lanczos"
+    - "gaussian"
+    - "mitchell"
+    - "hamming"
+    - "hann"
+    - "tent"
+    - "triangle"
+    - "box"
+
 ### Dummy commands
 
 **for purposes of having a CLI, will just print out the provided arguments**
@@ -52,7 +74,7 @@ Default values provided for move and draw of `(0, 0, 0)`
 
 ## Additional notes
 
-Project submission notes included in `Project1Notes.txt`
+Project submission notes included in `ProjectNotes#.txt` for respective project
 
-Assignment specification included in `specs` folder
+Assignment specifications included in `specs` folder
 
