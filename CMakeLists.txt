@@ -13,6 +13,7 @@ find_package(OpenGL REQUIRED)
 
 add_subdirectory(mod_base)
 add_subdirectory(mod_dummy)
+add_subdirectory(mod_filter)
 add_subdirectory(mod_tiff)
 
 add_executable(ipr main.cpp)
@@ -20,6 +21,7 @@ add_executable(ipr main.cpp)
 target_link_libraries(ipr
   mod_base
   mod_dummy
+  mod_filter
   mod_tiff
   ${OPENGL_gl_LIBRARY}
   ${OPENGL_glu_LIBRARY}
