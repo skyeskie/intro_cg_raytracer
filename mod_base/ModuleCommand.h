@@ -50,6 +50,13 @@ public:
      * where (wht) is short for [ \t\r\n] (whitespace)
      */
     int sanitize_int(std::string str);
+
+protected:
+    //Use to make sure right number of args
+    void check_args(size_t, std::vector<std::string>&,
+                    std::string fill = "{NULL}");
+    void check_args(size_t, size_t, std::vector<std::string>&,
+                    std::string fill = "{NULL}");
 };
 
 #endif // MODULECOMMAND_H

@@ -27,6 +27,7 @@
 #include "mod_dummy/DummyHandle.h"
 #include "mod_tiff/TiffIO.h"
 #include "mod_filter/ImageResize.h"
+#include "mod_3d/DrawTransformed.h"
 
 using namespace std;
 
@@ -226,7 +227,13 @@ main_loop(char line[])
         result = "null";
     }
 
-    
+    bool newprompt = true;
+    if(result=="pause") {
+        printf("\nPress any key to continue...");
+        result = "null";
+        main_handler.wait_ack = true;
+        newprompt = false;
+    }
 
 //Suppress close and exitFS commands from cmd prompt
    if(result=="close" || result=="exitFS") result = "null";
@@ -242,8 +249,9 @@ main_loop(char line[])
    }
    else if( result != "null" )
       cout << "RESULT: " << result << endl;
-     
-   printf("CLI> ");
+
+   if(newprompt)
+      printf("CLI> ");
    fflush(stdout);
 
    return;
@@ -271,6 +279,18 @@ main_loop(char line[])
 void
 read_next_command(unsigned char key, int x, int y)
 {
+    //Hack for pause
+    if(main_handler.wait_ack) {
+        printf("\n");
+        main_handler.wait_ack = false;
+        main_handler.read_loop();        
+        if(main_handler.wait_ack) //Another pause...
+            printf("\nPress any key to continue...");
+        else printf("\nCLI> ");
+        fflush(stdout);
+        return;
+    }
+    //End pause
    static char line[MAXLINE];
    static int count;
   
@@ -342,7 +362,7 @@ main(int argc, char** argv)
 
    /**
 	* Load modules into main handler here
-	* general syntax is ModuleClass ./mnmodule( handler )
+	* general syntax is ModuleClass varname( handler )
 	* 
 	* main_handler is declared as global at beginning
 	*/
@@ -352,6 +372,7 @@ main(int argc, char** argv)
    DummyHandle handler_mod_dummy(main_handler);
    TiffIO handler_tiff_io(main_handler);
    ImageResize handler_resample(main_handler);
+   DrawTransformed handler_sgp(main_handler);
 
    
    printf("CLI> ");

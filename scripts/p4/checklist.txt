@@ -1,0 +1,35 @@
+------1,-1 to 1,1
+circle v
+cube v
+x v
+y v
+z v
+the_face ts(circle)
+
+----Misc (-2.5,97.5) to (2.5,102.5)
+cube2 ts(cube)
+
+----With View
+cube_test_1 Pt(cube)
+cube_test_2 Pt(cube)
+cube_test_3 Pt(cube)
+face o(the_face)
+faces itsr(the_face)
+junk Pltsr(x,y,z,cube2,
+orient Oots(cube)
+orient2 OPts(cube)
+orient3 OPlso(cube)
+ortho olv
+ortho_test olv
+persp Plts(cube,x,y,z)
+rot Ptsrv (x,y,z,cube2)
+simple ov
+
+
+TODO:
+change reset behavior
+Perspective
+rotate
+debug
+generic
+screen r/w

@@ -28,6 +28,8 @@ public:
     
     //Main catch -- handles commands
     virtual std::string execute(std::vector< std::string > argv);
+
+    std::string reset_tags();
     
     //Help functions for module
     virtual void help(const std::string cmd) const;

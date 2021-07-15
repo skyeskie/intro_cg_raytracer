@@ -19,6 +19,10 @@
 #include <map>
 #include <vector>
 #include <set>
+#include <stack>
+#include <fstream>
+#include <iostream>
+#include <auto_ptr.h>
 #include "ModuleCommand.h"
 #include "FunctionCommand.h"
 
@@ -59,7 +63,7 @@ public:
      *         this is "exit" if the program is supposed to exit
      */
     std::string execute(char* line);
-    std::string execute(std::string &line);
+    std::string execute(std::string line);
     
     /**
      * help()
@@ -86,6 +90,13 @@ public:
      */
     std::string read_file(std::vector<std::string>);
 
+    /**
+     * read_loop()
+     *          main loop for reading file
+     * @pre open $fp on file_stack
+     */
+    std::string read_loop();
+
     GLubyte main_window[MAX_IMG_HEIGHT][MAX_IMG_WIDTH][3];
 
     size_t window_width;
@@ -97,6 +108,9 @@ public:
      * @post all characters in string are lower case
      */
     void str_to_lower(std::string&);
+
+    ///Flag to indicate should reenter read
+    bool wait_ack;
 
 private:    
     /**
@@ -114,8 +128,31 @@ private:
     //Used to get syntax on last command entered
     std::string last_exec;
 
-    //Read file stack
-    //Using set since don't care about order
+    struct file_record {
+        file_record(std::string n, std::ifstream* p, bool v=0)
+                :fname(n), fp(p), verbose(v)
+        {
+        };
+
+       // ~file_record();
+
+        file_record(const file_record& rhs)
+            :fname(rhs.fname), fp(NULL), verbose(rhs.verbose)
+        {};
+        
+        std::string fname;
+        std::auto_ptr<std::ifstream> fp;
+        bool verbose;
+
+        //std::ifstream fh;
+    };
+
+    void add_fp_to_stack(std::string n, std::ifstream* p, bool v=0);
+    
+    //File stack -- actual stack used for reentry
+    std::stack<file_record> file_stack;
+
+    //Keep track for easy check on recursion
     std::set<std::string> read_stack;
 };
 
