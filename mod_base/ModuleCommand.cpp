@@ -60,12 +60,12 @@ float ModuleCommand::sanitize_float(std::string str) {
 
     float res = cur_num;
     if(divide) {
-        while(res > 1) {
+        while(res >= 1) {
             res /= 10;
         }
     }
 
-    res += numer;
+    res += (float) numer;
     if(neg_num) res *= -1;
 
     return res;

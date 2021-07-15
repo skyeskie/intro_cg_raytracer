@@ -1,0 +1,7 @@
+# Author: Scott Yeskie
+# Minify of photographic image
+
+border truncate
+
+tiffread sky_rgb.tif
+scale 0.3

@@ -53,6 +53,11 @@ string TiffIO::execute(vector< string > argv) {
     }
     if(cmd=="tiffwrite") {
         //Setup defaults
+        
+        //Default change size to match window bounds
+        img_width = ch->window_width;
+        img_height = ch->window_height;
+
         ostringstream strconv;
         switch(argv.size()) {
             case 0:

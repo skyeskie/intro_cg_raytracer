@@ -1,0 +1,7 @@
+# Author: Scott Yeskie
+# Magnify of cartoon image
+
+border truncate
+
+tiffread pooh.tif
+scale 2.0
