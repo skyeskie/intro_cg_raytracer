@@ -13,15 +13,16 @@ Build system switched entirely to CMake
 * Requires OpenGL, GLUT, and X11 libraries (installed so CMake can find)
     **Run on Manjaro 21.1.0, didn't verify which packages provided the libraries**
 
-1. Run `cmake`
-1. Run `make`
-1. Execute binary `assign1`
+1. Run `cmake -S . -B build`
+1. Switch to build folder (`cd build`)
+1. Compile with `make`
+1. Execute binary `ipr`
 
 ## Notes on running
 
 - Keep in mind need to make sure the graphics window needs to be selected for keyboard input, _not_ the terminal it was launched from.
-- To run scripts from the `scripts` directory, the binary needs to be started from there (eg `cd scripts && ../assign1`)
-- The `test.icf` scripts are *intended* to have an error.
+- Scripts in the scripts folder are indended to be run from one level up.
+- Several scripts like `test.icf` are *intended* to have an error.
 
 ## Supported commands:
 
@@ -29,6 +30,15 @@ Build system switched entirely to CMake
 
 - `read <file>` reads contents of `file` treating each line as a command
 - `exit` - exit the program
+
+### TIFF commands
+
+As a convenience, will try to get image in `./images` directory before failing.
+
+- `tiffstat <file>` - Display info about TIFF file
+- `tiffread <file>` - Read file to window
+- `tiffwrite <file>`- Write window to file
+- `iotest <file>` - test read function with some TIFF values filled in
 
 ### Dummy commands
 
