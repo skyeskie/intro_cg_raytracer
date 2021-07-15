@@ -3,7 +3,7 @@
 #include <stdexcept>
 using namespace std;
 
-float ModuleCommand::sanitize_float(string str) {
+float ModuleCommand::sanitize_float(std::string str) {
     // 
 
     //Flags
@@ -71,7 +71,7 @@ float ModuleCommand::sanitize_float(string str) {
     return res;
 }
 
-int ModuleCommand::sanitize_int(string str) {
+int ModuleCommand::sanitize_int(std::string str) {
     //Flags
     bool can_neg = true;
     bool neg_num = false;

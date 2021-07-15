@@ -20,7 +20,7 @@
 #include "IFD_Entry.h"
 using namespace std;
 
-typedef size_t uint;
+//typedef size_t uint;
 
 //enum COLOR_TYPES { BILEVEL_IMG, GREYSC_IMG, PALETTE_IMG, RGB_IMG };
 
@@ -138,7 +138,7 @@ string TiffIO::tiff_stat(string filename) {
         cout << "Image Type:" << img_colortype << endl;
         cout << "Contents of Directory 0:" << endl;
     }
-    catch (runtime_error excpt) {
+    catch (runtime_error &excpt) {
         if(tags_loaded) {
             cout << "Validation failed: " << excpt.what() << endl;
         } else {
