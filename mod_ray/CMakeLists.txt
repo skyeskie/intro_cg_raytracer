@@ -1,0 +1,9 @@
+add_library(mod_ray
+  SHARED
+    ILight.cpp
+    Ray.cpp
+    RayTracer.cpp
+    Screen.cpp
+    ScreenOrtho.cpp
+    ScreenPersp.cpp
+)
