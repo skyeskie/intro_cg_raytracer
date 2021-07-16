@@ -1,3 +1,6 @@
+#ifndef MATRIX_CPP
+#define MATRIX_CPP
+
 #include "Matrix.h"
 #include <stdexcept>
 #include <algorithm>
@@ -138,3 +141,5 @@ ostream& operator<<( ostream& out, Matrix< T >& m )
     
     return out;
 }
+
+#endif

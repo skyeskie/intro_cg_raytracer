@@ -22,7 +22,7 @@
 #include <stack>
 #include <fstream>
 #include <iostream>
-#include <auto_ptr.h>
+#include <memory>
 #include "ModuleCommand.h"
 #include "FunctionCommand.h"
 
@@ -137,11 +137,11 @@ private:
        // ~file_record();
 
         file_record(const file_record& rhs)
-            :fname(rhs.fname), fp(NULL), verbose(rhs.verbose)
+            :fname(rhs.fname), fp(), verbose(rhs.verbose)
         {};
         
         std::string fname;
-        std::auto_ptr<std::ifstream> fp;
+        std::unique_ptr<std::ifstream> fp;
         bool verbose;
 
         //std::ifstream fh;

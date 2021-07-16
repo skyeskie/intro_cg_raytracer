@@ -11,17 +11,21 @@ find_package(GLUT REQUIRED)
 find_package(X11 REQUIRED)
 find_package(OpenGL REQUIRED)
 
+add_subdirectory(mod_3d)
 add_subdirectory(mod_base)
 add_subdirectory(mod_dummy)
 add_subdirectory(mod_filter)
+add_subdirectory(mod_matrix)
 add_subdirectory(mod_tiff)
 
 add_executable(ipr main.cpp)
 
 target_link_libraries(ipr
   mod_base
+  mod_3d
   mod_dummy
   mod_filter
+  mod_matrix
   mod_tiff
   ${OPENGL_gl_LIBRARY}
   ${OPENGL_glu_LIBRARY}
