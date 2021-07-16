@@ -6,6 +6,7 @@
 - Project 2: TIFF read/write
 - Project 3: Image Resizing
 - Project 4: 3D Transformations
+- Project 5: Ray Tracing
 
 Updated July 2021 to make sure still runs (using Manjaro linux).
 
@@ -96,6 +97,55 @@ The 3D drawing is performed by mantaining a stack of matrix transformations (ini
 - `printview` - Debug command to show information about the view (from `perspective` or `ortho`)
 - `debug3d` - Toggle debug (verbose) mode
 
+### 3D Raytracing Commands
+
+The raytracing part functions by
+
+1. Setup the screen
+1. Setup the camera
+1. Add object(s)
+1. Add light(s)
+1. Run `trace` to render the scene
+
+**Colors for the various commands in this module are floats ranging from
+`(0.0, 0.0, 0.0)` as black to `(1.0, 1.0, 1.0)` as white.**
+
+The various commands are
+
+- `screen` - Set screen resolution
+- `orthocamera` - Setup camera as orthogonal using the screen width and height
+- `camera w h Ex Ey Ez Gx Gy Gz Ux Uy Uz dist au av bu bv`
+        Setup perspective camera
+    - Screen dimenstions `w` by `h`
+    - The eye vector `(Ex Ey Ez)` - where the eye is located
+    - The gaze vector `(Gx Gy Gz)` - where the eye is looking
+    - The up vector `(Ux Uy Uz)` - which direction is up from the eye
+    - The screen is from `(au av dist)` to `(bu bv dist)`
+- `background r g b` - Sets the background color, shown when the pixel's ray
+        doesn't hit anything. Arguments default to `0.0`
+- `sphere x y z r Mr Mg Mb Rr Rg Rb [Sr Sg Sb]` - Create a sphere in the scene
+    - The sphere is centered on `(x y z)` with radius `r`
+    - `(Mr, Mg, Mb)` specifies the ambient color (RGB)
+    - `(Rr, Rg, Rb)` specifies the reflective color (RGB)
+    - (Optional) `(Sr, Sg, Sb)` specifies the specular color (RGB)
+- `triangle Ax Ay Az Bx By Bz Cx Cy Cz Mr Mg Mb Rr Rg Rb [Sr Sg Sb]`
+    - The three vertices are `(Ax, Ay, Az)`, `(Bx, By, Bz)`, `(Cx, Cy, Cz)`
+    - `(Mr, Mg, Mb)` specifies the ambient color (RGB)
+    - `(Rr, Rg, Rb)` specifies the reflective color (RGB)
+    - (Optional) `(Sr, Sg, Sb)` specifies the specular color (RGB)
+    - The triangles are visible from either side
+- `box Ax Ay Az Bx By Bz Mr Mg Mb Rr Rg Rb [Sr Sg Sb]`
+    - The box is specified by the two points `(Ax, Ay, Az)` and `(Bx By Bz)`.
+        The points are opposite corners, with edges along the axis.
+    - `(Mr, Mg, Mb)` specifies the ambient color (RGB)
+    - `(Rr, Rg, Rb)` specifies the reflective color (RGB)
+    - (Optional) `(Sr, Sg, Sb)` specifies the specular color (RGB)
+- `ilight r g b x y z` - Creates a light at infinity with color `(r, g, b)`
+        shining in direction `(x, y, z)`
+- `clear` - resets all objects, lights, and the viewscreen. Additionally the
+        background color is set to black `(0, 0, 0)`
+- `trace` - Runs the raytracer on configured objects and puts to the screen
+
 ### Dummy commands
 
 **for purposes of having a CLI, will just print out the provided arguments**
@@ -110,5 +160,5 @@ Default values provided for move and draw of `(0, 0, 0)`
 
 Project submission notes included in `ProjectNotes#.txt` for respective project
 
-Assignment specifications included in `specs` folder
+Assignment specifications included in `specs` folder. (Project 5 not available)
 
