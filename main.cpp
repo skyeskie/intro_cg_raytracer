@@ -28,6 +28,7 @@
 #include "mod_tiff/TiffIO.h"
 #include "mod_filter/ImageResize.h"
 #include "mod_3d/DrawTransformed.h"
+#include "mod_ray/RayTracer.h"
 
 using namespace std;
 
@@ -373,6 +374,7 @@ main(int argc, char** argv)
    TiffIO handler_tiff_io(main_handler);
    ImageResize handler_resample(main_handler);
    DrawTransformed handler_sgp(main_handler);
+   RayTracer handler_raytrace(main_handler);
 
    
    printf("CLI> ");

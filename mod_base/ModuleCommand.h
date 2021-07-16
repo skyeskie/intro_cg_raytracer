@@ -57,6 +57,9 @@ protected:
                     std::string fill = "{NULL}");
     void check_args(size_t, size_t, std::vector<std::string>&,
                     std::string fill = "{NULL}");
+
+    void check_args(size_t, size_t, std::vector<float>&,
+                    float fill = 0.0);
 };
 
 #endif // MODULECOMMAND_H

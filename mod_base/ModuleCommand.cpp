@@ -136,3 +136,14 @@ void ModuleCommand::check_args(size_t lo, size_t hi, vector< string >& argv, str
         argv.push_back(fill);
     }
 }
+
+void ModuleCommand::check_args(size_t lo, size_t hi, std::vector< float >& argv, float fill)
+{
+    if(argv.size()<lo || argv.size()>hi) {
+        throw invalid_argument("Invalid number of arguments.");
+    }
+    while(argv.size() < hi) {
+        argv.push_back(fill);
+    }
+}
+

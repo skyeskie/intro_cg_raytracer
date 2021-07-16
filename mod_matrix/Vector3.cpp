@@ -1,5 +1,6 @@
 #include "Vector3.h"
 #include <math.h>
+#include <stdexcept>
 
 Vector3::Vector3()
     :i(0), j(0), k(0)
@@ -47,5 +48,65 @@ Vector3 Vector3::operator*(float s) const
     return tmp;
 }
 
+//Dot product
+float Vector3::operator*(const Vector3& rhs) const {
+    return i*rhs.i + j*rhs.j + k*rhs.k;
+}
 
+//Other mult:
+Vector3 Vector3::operator+(const Vector3& rhs) const {
+    Vector3 tmp(*this);
+    tmp.i += rhs.i;
+    tmp.j += rhs.j;
+    tmp.k += rhs.k;
+    return tmp;
+}
 
+Vector3& Vector3::operator+=(const Vector3& rhs) {
+    i += rhs.i;
+    j += rhs.j;
+    k += rhs.k;
+    return *this;
+}
+
+Vector3 Vector3::operator-(const Vector3& rhs) const
+{
+    Vector3 tmp(*this);
+    tmp.i -= rhs.i;
+    tmp.j -= rhs.j;
+    tmp.k -= rhs.k;
+    return tmp;
+}
+
+Vector3 Vector3::operator-(void )
+{
+    Vector3 tmp(*this);
+    tmp.i *= -1;
+    tmp.j *= -1;
+    tmp.k *= -1;
+    return tmp;
+}
+
+float& Vector3::at(int x)
+{
+    if(x==0) return i;
+    if(x==1) return j;
+    if(x==2) return k;
+    throw std::overflow_error("Tried to access out of Vector range.");
+    return i;
+}
+
+float Vector3::at(int x) const
+{
+    if(x==0) return i;
+    if(x==1) return j;
+    if(x==2) return k;
+    throw std::overflow_error("Tried to access out of Vector range.");
+    return -1;
+}
+
+std::ostream& operator<<(std::ostream& out, const Vector3& v)
+{
+    out << "( " << v.i << ", " << v.j << ", " << v.k << " )";
+    return out;
+}
