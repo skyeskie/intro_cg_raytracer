@@ -19,6 +19,8 @@ app/website work.
 
 Updated July 2021 to make sure still runs (using Manjaro linux).
 
+Orgininal (as-submitted) code on branch `as_submitted`
+
 Build system switched entirely to CMake
 
 ## Building
